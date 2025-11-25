@@ -1,3 +1,5 @@
+
+//Mainform.cs
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,142 +11,142 @@ namespace MyGame
     {
         private Player player;
         private List<Enemy> enemies = new List<Enemy>();
+
         private SpriteSheet sheet;
-
         private DateTime lastTick;
-        private Timer gameTimer;
 
+        private System.Windows.Forms.Timer gameTimer;
+
+        private Bitmap groundTexture;
+
+        // ============================
+        //         CONSTRUCTOR
+        // ============================
         public MainForm()
         {
-            // -------------------------
-            //   CONFIG VENTANA
-            // -------------------------
             this.ClientSize = new Size(960, 640);
             this.DoubleBuffered = true;
-            this.Text = "MyGame - OOP";
+            this.Text = "MyGame - Battle System";
             this.KeyPreview = true;
 
-            // -------------------------
-            //   CARGA SPRITESHEET
-            // -------------------------
+            // Cargar spritesheet
             try
             {
-                sheet = new SpriteSheet(Config.SpriteSheetPath);
+                sheet = new SpriteSheet("Assets/sheet.png"); // AJUSTADO A TU REPO
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No se pudo cargar el sprite: " + ex.Message);
-                this.Close();
-                return;
+                MessageBox.Show("Error cargando spritesheet: " + ex.Message);
+                Environment.Exit(1);
             }
 
-            // -------------------------
-            //   CREAR PLAYER
-            // -------------------------
-            var playerAnim = new Animator(sheet)
-            {
-                FrameTimeMs = 100
-            };
+            // Textura del piso
+            groundTexture = new Bitmap(1, 1);
+            groundTexture.SetPixel(0, 0, Color.DarkOliveGreen);
 
-            player = new Player(new PointF(120, 360), playerAnim);
+            // Jugador
+            var playerAnim = new Animator(sheet);
+            playerAnim.FrameTimeMs = 100;
+            player = new Player(new PointF(120, 400), playerAnim);
 
-            // -------------------------
-            //   CREAR ENEMIGOS
-            // -------------------------
+            // Enemigos
             for (int i = 0; i < 3; i++)
             {
-                var anim = new Animator(sheet)
-                {
-                    FrameTimeMs = 120
-                };
+                var anim = new Animator(sheet);
+                anim.FrameTimeMs = 120;
 
-                var enemy = new Enemy(
-                    new PointF(500 + i * 80, 360 - i * 20),
+                var en = new Enemy(
+                    new PointF(520 + i * 80, 400 - i * 20),
                     anim,
-                    player);
+                    player
+                );
 
-                enemies.Add(enemy);
+                enemies.Add(en);
             }
 
-            // -------------------------
-            //   LOOP DEL JUEGO
-            // -------------------------
             lastTick = DateTime.Now;
 
-            gameTimer = new Timer();
-            gameTimer.Interval = 16; // 60 FPS aprox
+            // Timer 60 FPS
+            gameTimer = new System.Windows.Forms.Timer();
+            gameTimer.Interval = 16;
             gameTimer.Tick += GameLoop;
             gameTimer.Start();
 
-            // -------------------------
-            //   INPUT DEL TECLADO
-            // -------------------------
+            // Controles
             this.KeyDown += (s, e) => player.KeyDown(e.KeyCode);
             this.KeyUp += (s, e) => player.KeyUp(e.KeyCode);
         }
 
-        // ==========================================================
-        //   LOOP PRINCIPAL
-        // ==========================================================
+        // ============================
+        //          GAME LOOP
+        // ============================
         private void GameLoop(object sender, EventArgs e)
         {
             var now = DateTime.Now;
             var elapsed = (now - lastTick).TotalMilliseconds;
             lastTick = now;
 
+            // Update player
             player.Update(elapsed);
 
+            // Update enemies
             foreach (var en in enemies)
                 en.Update(elapsed);
 
-            // Ataque del jugador
+            // Player attacking logic
             player.TryHit(enemies);
 
-            // Eliminar enemigos muertos
-            enemies.RemoveAll(x => !x.Alive);
+            // Remove dead enemies
+            enemies.RemoveAll(e => !e.Alive);
 
-            this.Invalidate(); // redibujar
+            // Redraw screen
+            this.Invalidate();
         }
 
-        // ==========================================================
-        //   DIBUJO
-        // ==========================================================
+        // ============================
+        //            RENDER
+        // ============================
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
 
-            // Fondo
-            g.Clear(Color.CornflowerBlue);
+            DrawScene(g);
 
-            // Suelo
-            g.FillRectangle(Brushes.DarkOliveGreen,
-                new Rectangle(0, 420, ClientSize.Width, ClientSize.Height - 420));
-
-            // Dibujar entidades
+            // Draw characters
             player.Draw(g);
             foreach (var en in enemies)
                 en.Draw(g);
 
-            // HUD
             DrawHUD(g);
         }
 
-        // ==========================================================
-        //   HUD
-        // ==========================================================
+        private void DrawScene(Graphics g)
+        {
+            g.Clear(Color.SkyBlue);
+
+            // Piso
+            g.FillRectangle(
+                new SolidBrush(Color.DarkOliveGreen),
+                0,
+                450,
+                this.ClientSize.Width,
+                this.ClientSize.Height - 450
+            );
+        }
+
         private void DrawHUD(Graphics g)
         {
+            // Barra de vida
             g.FillRectangle(Brushes.Black, 10, 10, 160, 22);
             g.FillRectangle(Brushes.Red, 12, 12, 156, 18);
 
-            float hpPercent = Math.Max(0, player.HP) / 10f;  // para 10 HP máximo
-
+            float hpPercent = Math.Max(0, player.HP) / 10f;
             g.FillRectangle(Brushes.Green, 12, 12, (int)(156 * hpPercent), 18);
 
             g.DrawString($"HP: {player.HP}", this.Font, Brushes.White, 14, 12);
-            g.DrawString($"Enemies: {enemies.Count}", this.Font, Brushes.White, 14, 36);
+            g.DrawString($"Enemigos: {enemies.Count}", this.Font, Brushes.White, 14, 36);
         }
     }
 }

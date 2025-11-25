@@ -12,3 +12,4 @@ C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net10.0-wi
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net10.0-windows\MyGame.pdb
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net10.0-windows\MyGame.genruntimeconfig.cache
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net10.0-windows\ref\MyGame.dll
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net10.0-windows\MyGame.sourcelink.json

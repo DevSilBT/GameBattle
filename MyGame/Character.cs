@@ -14,8 +14,10 @@ namespace MyGame
         public bool Alive => HP > 0;
 
         protected Animator animator;
-        protected int width = Config.FrameW * Config.Scale;
-        protected int height = Config.FrameH * Config.Scale;
+
+        protected int width = (int)(Config.FrameW * Config.Scale);
+        protected int height = (int)(Config.FrameH * Config.Scale);
+
 
         // Combat
         protected double attackCooldownMs = 600;
