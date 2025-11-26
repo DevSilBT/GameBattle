@@ -12,6 +12,8 @@ namespace MyGame
 
         // Alive es solo lectura
         public bool Alive => HP > 0;
+        // Nueva propiedad para verificar si el personaje acaba de morir
+        public bool IsAlive => HP > 0;
 
         protected Animator animator;
 
@@ -85,8 +87,39 @@ namespace MyGame
                 int drawWidth = (int)(Config.FrameW * Config.Scale);
                 int drawHeight = (int)(Config.FrameH * Config.Scale);
 
+                // Crear una copia invertida horizontalmente si es necesario
+                Bitmap drawnBmp = bmp;
+
+                // Verificar si es un jugador y si necesita invertirse
+                if (this is Player player)
+                {
+                    if (player.CurrentDirection == 1) // Izquierda
+                    {
+                        drawnBmp = new Bitmap(bmp.Width, bmp.Height);
+                        using (Graphics gr = Graphics.FromImage(drawnBmp))
+                        {
+                            // Crear una matriz de transformación
+                            System.Drawing.Drawing2D.Matrix transformMatrix = new System.Drawing.Drawing2D.Matrix();
+                            // Escalar horizontalmente por -1 (inversión)
+                            transformMatrix.Scale(-1, 1);
+                            // Trasladar para compensar la inversión
+                            transformMatrix.Translate(bmp.Width, 0);
+                            // Aplicar la transformación al contexto gráfico
+                            gr.Transform = transformMatrix;
+
+                            // Dibujar el sprite original (que ahora se invertirá y trasladará)
+                            gr.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+
+                            // Liberar la matriz
+                            transformMatrix.Dispose();
+                        }
+                    }
+                }
+                // Si necesitas que otros personajes (como enemigos) también se inviertan,
+                // puedes agregar una propiedad similar en la clase Enemy y verificarla aquí.
+
                 g.DrawImage(
-                    bmp,
+                    drawnBmp,
                     new Rectangle(
                         (int)Position.X,
                         (int)Position.Y,
@@ -94,6 +127,12 @@ namespace MyGame
                         drawHeight
                     )
                 );
+
+                // Liberar recursos de la imagen invertida si fue creada
+                if (drawnBmp != bmp)
+                {
+                    drawnBmp.Dispose();
+                }
             }
             else
             {
@@ -108,7 +147,8 @@ namespace MyGame
         // ------------------------------
         //      MÉTODO TOMAR DAÑO USADO POR Player.TryHit
         // ------------------------------
-        public virtual void TakeDamage(int amount)
+        // Modificado para devolver true si el personaje muere
+        public virtual bool TakeDamage(int amount)
         {
             HP -= amount;
 
@@ -117,11 +157,13 @@ namespace MyGame
                 // NO asignamos Alive porque es una propiedad de solo lectura
                 // Ajusta la fila según tu spritesheet. Suponiendo fila 3 para "muerte"
                 animator.SetRow(3, Config.Columns);
+                return true; // Indica que el personaje murió
             }
             else
             {
                 // Ajusta la fila según tu spritesheet. Suponiendo fila 4 para "herido"
                 animator.SetRow(4, Config.Columns);
+                return false; // Indica que el personaje no murió
             }
         }
     }

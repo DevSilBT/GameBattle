@@ -3,15 +3,15 @@ C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-win
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.runtimeconfig.json
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.dll
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.pdb
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\System.Drawing.Common.dll
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.AssemblyInfoInputs.cache
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.AssemblyInfo.cs
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.csproj.CoreCompileInputs.cache
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.sourcelink.json
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.csproj.Up2Date
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.dll
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\refint\MyGame.dll
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.pdb
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.genruntimeconfig.cache
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\ref\MyGame.dll
-C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\System.Drawing.Common.dll
-C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.csproj.Up2Date

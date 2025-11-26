@@ -12,6 +12,12 @@ namespace MyGame
         private PointF attackSource;
         private int currentDirection = 0; // 0 = derecha, 1 = izquierda
 
+        // Propiedad pública para acceder a la dirección desde Character
+        public int CurrentDirection => currentDirection;
+
+        // Nueva propiedad para indicar si el juego terminó
+        public bool IsGameOver => !Alive;
+
         public Player(PointF pos, Animator animator) : base(pos, animator)
         {
             Speed = 4.5f;
@@ -25,7 +31,7 @@ namespace MyGame
 
         public override void Update(double elapsedMs)
         {
-            if (!Alive) return;
+            if (!Alive) return; // Si el jugador murió, no actualizamos su lógica
 
             var dx = 0f;
             var dy = 0f;
@@ -105,8 +111,14 @@ namespace MyGame
 
                 if (dist <= attackRange)
                 {
-                    enemy.TakeDamage(attackDamage);
-                    return true;
+                    // Usamos TakeDamage en lugar de ReceiveDamage
+                    bool enemyDied = enemy.TakeDamage(attackDamage);
+                    if (enemyDied)
+                    {
+                        // Aquí puedes incrementar el contador de enemigos matados si lo manejas en MainForm
+                        // Por ahora, simplemente devolvemos true si matamos al menos uno
+                        return true;
+                    }
                 }
             }
 
