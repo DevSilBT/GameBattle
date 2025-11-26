@@ -1,5 +1,6 @@
 
 //Mainform.cs
+//Mainform.cs
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,12 +13,14 @@ namespace MyGame
         private Player player;
         private List<Enemy> enemies = new List<Enemy>();
 
-        private SpriteSheet sheet;
+        // Cambiamos SpriteSheet por Bitmaps individuales
+        private Bitmap playerImage; // Imagen del jugador
+        private Bitmap enemyImage;  // Imagen del enemigo
+        private Bitmap background;  // Imagen de fondo (lawntown.png)
+
         private DateTime lastTick;
 
         private System.Windows.Forms.Timer gameTimer;
-
-        private Bitmap groundTexture;
 
         // ============================
         //         CONSTRUCTOR
@@ -29,30 +32,48 @@ namespace MyGame
             this.Text = "MyGame - Battle System";
             this.KeyPreview = true;
 
-            // Cargar spritesheet
-            try
-            {
-                sheet = new SpriteSheet("Assets/sheet.png"); // AJUSTADO A TU REPO
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error cargando spritesheet: " + ex.Message);
-                Environment.Exit(1);
-            }
+// En MainForm.cs, dentro del constructor, modifica el bloque try-catch:
+try
+{
+    string assetsPath = Config.AssetsPath;
 
-            // Textura del piso
-            groundTexture = new Bitmap(1, 1);
-            groundTexture.SetPixel(0, 0, Color.DarkOliveGreen);
+    // Cargar imágenes con mensajes de depuración
+    Console.WriteLine("Intentando cargar imágenes...");
 
-            // Jugador
-            var playerAnim = new Animator(sheet);
+    playerImage = Config.LoadImage("player.png");
+    Console.WriteLine($"playerImage cargada: {playerImage?.Width}x{playerImage?.Height}");
+
+    enemyImage = Config.LoadImage("enemy.png");
+    Console.WriteLine($"enemyImage cargada: {enemyImage?.Width}x{enemyImage?.Height}");
+
+    background = Config.LoadImage("lawntown.png");
+    Console.WriteLine($"background cargada: {background?.Width}x{background?.Height}");
+
+    // Verificar si alguna imagen es nula
+    if (playerImage == null || enemyImage == null || background == null)
+    {
+        throw new Exception("Una o más imágenes son nulas.");
+    }
+
+    Console.WriteLine("¡Imágenes cargadas correctamente!");
+}
+catch (Exception ex)
+{
+    MessageBox.Show($"Error crítico al cargar imágenes:\n{ex.Message}\n\nVerifique que los archivos 'player.png', 'enemy.png' y 'lawntown.png' existan en la carpeta 'Assets'.", "Error de Carga");
+    Environment.Exit(1);
+}
+
+
+
+            // Jugador: Creamos un Animator pero lo inicializamos con una sola imagen
+            var playerAnim = new Animator(playerImage); // Modificado: pasamos la imagen directamente
             playerAnim.FrameTimeMs = 100;
             player = new Player(new PointF(120, 400), playerAnim);
 
-            // Enemigos
+            // Enemigos: Creamos un Animator con la imagen del enemigo
             for (int i = 0; i < 3; i++)
             {
-                var anim = new Animator(sheet);
+                var anim = new Animator(enemyImage); // Modificado: pasamos la imagen directamente
                 anim.FrameTimeMs = 120;
 
                 var en = new Enemy(
@@ -76,6 +97,40 @@ namespace MyGame
             this.KeyDown += (s, e) => player.KeyDown(e.KeyCode);
             this.KeyUp += (s, e) => player.KeyUp(e.KeyCode);
         }
+
+// En Config.cs, reemplaza el método LoadImage existente:
+public static Bitmap LoadImage(string fileName)
+{
+    // Construir la ruta absoluta usando Application.StartupPath
+    string fullPath = Path.Combine(Application.StartupPath, "Assets", fileName);
+
+    // Verificar si el archivo existe
+    if (!File.Exists(fullPath))
+    {
+        // Si no existe en Application.StartupPath, intentar con una ruta relativa al proyecto
+        string projectPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets"));
+        fullPath = Path.Combine(projectPath, fileName);
+
+        if (!File.Exists(fullPath))
+        {
+            throw new FileNotFoundException($"No se encontró el archivo {fileName} en ninguna de las rutas probadas.\nRuta 1: {Path.Combine(Application.StartupPath, "Assets")}\nRuta 2: {projectPath}");
+        }
+    }
+
+    try
+    {
+        using (var temp = new Bitmap(fullPath))
+        {
+            return new Bitmap(temp);
+        }
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"Error al cargar la imagen {fileName}: {ex.Message}", ex);
+    }
+}
+
+
 
         // ============================
         //          GAME LOOP
@@ -112,7 +167,8 @@ namespace MyGame
 
             Graphics g = e.Graphics;
 
-            DrawScene(g);
+            // Dibujar fondo (lawntown.png)
+            DrawBackground(g);
 
             // Draw characters
             player.Draw(g);
@@ -122,18 +178,10 @@ namespace MyGame
             DrawHUD(g);
         }
 
-        private void DrawScene(Graphics g)
+        private void DrawBackground(Graphics g)
         {
-            g.Clear(Color.SkyBlue);
-
-            // Piso
-            g.FillRectangle(
-                new SolidBrush(Color.DarkOliveGreen),
-                0,
-                450,
-                this.ClientSize.Width,
-                this.ClientSize.Height - 450
-            );
+            // Dibujar la imagen de fondo completa
+            g.DrawImage(background, 0, 0, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void DrawHUD(Graphics g)

@@ -69,24 +69,36 @@ namespace MyGame
             attackTimer += elapsedMs;
             animator.Update(elapsedMs);
         }
+// En Character.cs, modifica el método Draw:
+public virtual void Draw(Graphics g)
+{
+    if (!Alive) return;
 
-        public virtual void Draw(Graphics g)
-        {
-            if (!Alive) return;
+    var bmp = animator.CurrentFrame();
+    if (bmp != null)
+    {
+        // Redimensionar la imagen al tamaño definido en Config
+        int drawWidth = (int)(Config.FrameW * Config.Scale);
+        int drawHeight = (int)(Config.FrameH * Config.Scale);
 
-            using (var bmp = animator.CurrentFrame())
-            {
-                g.DrawImage(
-                    bmp,
-                    new Rectangle(
-                        (int)Position.X,
-                        (int)Position.Y,
-                        width,
-                        height
-                    )
-                );
-            }
-        }
+        g.DrawImage(
+            bmp,
+            new Rectangle(
+                (int)Position.X,
+                (int)Position.Y,
+                drawWidth,
+                drawHeight
+            )
+        );
+    }
+    else
+    {
+        // Dibujar un rectángulo rojo como fallback si la imagen es nula
+        g.FillRectangle(Brushes.Red, (int)Position.X, (int)Position.Y, 50, 50);
+    }
+}
+
+
 
         protected bool CanAttack() => attackTimer >= attackCooldownMs;
         protected void ResetAttackTimer() => attackTimer = 0;
