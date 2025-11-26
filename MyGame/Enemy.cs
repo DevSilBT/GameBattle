@@ -41,7 +41,8 @@ namespace MyGame
                     Position.Y + ny * Speed
                 );
 
-                animator.SetRow(1, Config.Columns);
+                // Fila 0 para animación de movimiento (ajusta según tu spritesheet)
+                animator.SetRow(0, Config.Columns);
             }
             else
             {
@@ -49,7 +50,13 @@ namespace MyGame
                 if (CanAttack())
                 {
                     ResetAttackTimer();
-                    animator.SetRow(3, Config.Columns);
+                    // Fila 1 para animación de ataque (ajusta según tu spritesheet)
+                    // Si tu spritesheet de enemigo solo tiene una fila (0), puedes usarla para ataque también
+                    // o crear una nueva fila si tienes frames específicos de ataque.
+                    // Por ejemplo, si tienes una fila 1 para ataque:
+                    // animator.SetRow(1, Config.Columns);
+                    // Si solo usas la fila 0 para todo:
+                    animator.SetRow(0, Config.Columns); // O una fila específica de ataque si la tienes
 
                     target.ReceiveDamage(
                         attackDamage,

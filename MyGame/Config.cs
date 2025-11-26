@@ -13,12 +13,12 @@ public static class Config
 
     // ==== Tamaños de frame ====
     // Ajusta estos valores a tu Player y Enemy
-    public static int FrameW = 64;      // ancho de cada frame
-    public static int FrameH = 64;      // alto de cada frame
-    public static float Scale = 2.0f;   // escalado del personaje
-
-    // ==== Spritesheet ====
-    public static int Columns = 4;  // número de columnas del sheet principal
+  // En Config.cs, ajusta estos valores:
+public static int FrameW = 48;      // ancho de cada frame (ajustado a tu spritesheet del jugador)
+public static int FrameH = 32;      // alto de cada frame (ajustado a tu spritesheet del jugador)
+public static float Scale = 2.0f;   // escalado del personaje
+public static int Columns = 4;       // número de columnas del sheet principal  // ==== Spritesheet ====
+   
 
     // ==== Cargar imagen simple ====
     public static Bitmap LoadImage(string fileName)

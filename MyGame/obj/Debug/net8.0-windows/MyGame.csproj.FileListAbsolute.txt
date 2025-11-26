@@ -13,3 +13,5 @@ C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-win
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.pdb
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.genruntimeconfig.cache
 C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\ref\MyGame.dll
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\System.Drawing.Common.dll
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.csproj.Up2Date

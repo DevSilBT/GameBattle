@@ -1,4 +1,4 @@
-// MainMenuForm.cs
+//MainMenuForm.cs
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,8 +10,8 @@ namespace MyGame
     // Agregar 'partial' aquí
     public partial class MainMenuForm : Form
     {
-        // Campo para la imagen del título
-        private Bitmap titleImage;
+        // Campo para la imagen del título - AHORA ACEPTA NULL
+        private Bitmap? titleImage;
 
         // Lista de jugadores (para el registro) - DENTRO DE ESTE FORMULARIO
         private List<PlayerRecord> playerRecords = new List<PlayerRecord>();
@@ -19,9 +19,8 @@ namespace MyGame
         // Clase interna para almacenar registros de jugadores - DENTRO DE ESTE FORMULARIO
         private class PlayerRecord
         {
-            public string Name { get; set; }
-            public int BestTime { get; set; } // Mejor tiempo en segundos
-
+            public string Name { get; set; } = string.Empty; // Inicializar
+            public int BestTime { get; set; }
             public PlayerRecord(string name, int bestTime)
             {
                 Name = name;
@@ -64,7 +63,7 @@ namespace MyGame
             btnRegister.Text = "Register";
             btnRegister.Font = buttonStyle;
             btnRegister.Size = buttonSize;
-            btnRegister.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 200);
+            btnRegister.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 200); // Ajusta Y según necesites
             btnRegister.Click += BtnRegister_Click;
             this.Controls.Add(btnRegister);
 
@@ -73,7 +72,7 @@ namespace MyGame
             btnPlay.Text = "Play";
             btnPlay.Font = buttonStyle;
             btnPlay.Size = buttonSize;
-            btnPlay.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 270);
+            btnPlay.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 270); // Ajusta Y según necesites
             btnPlay.Click += BtnPlay_Click;
             this.Controls.Add(btnPlay);
 
@@ -82,7 +81,7 @@ namespace MyGame
             btnOptions.Text = "Options";
             btnOptions.Font = buttonStyle;
             btnOptions.Size = buttonSize;
-            btnOptions.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 340);
+            btnOptions.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 340); // Ajusta Y según necesites
             btnOptions.Click += BtnOptions_Click;
             this.Controls.Add(btnOptions);
 
@@ -91,13 +90,13 @@ namespace MyGame
             btnExit.Text = "Exit";
             btnExit.Font = buttonStyle;
             btnExit.Size = buttonSize;
-            btnExit.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 410);
+            btnExit.Location = new Point((this.ClientSize.Width - buttonSize.Width) / 2, 410); // Ajusta Y según necesites
             btnExit.Click += BtnExit_Click;
             this.Controls.Add(btnExit);
         }
 
-        // --- Manejador del Botón Register ---
-        private void BtnRegister_Click(object sender, EventArgs e)
+        // --- Manejador del Botón Register - AHORA ACEPTA NULL EN SENDER ---
+        private void BtnRegister_Click(object? sender, EventArgs e) // <-- Cambiado object a object?
         {
             using (var registerForm = new RegisterForm())
             {
@@ -115,8 +114,8 @@ namespace MyGame
             }
         }
 
-        // --- Manejador del Botón Play ---
-        private void BtnPlay_Click(object sender, EventArgs e)
+        // --- Manejador del Botón Play - AHORA ACEPTA NULL EN SENDER ---
+        private void BtnPlay_Click(object? sender, EventArgs e) // <-- Cambiado object a object?
         {
             this.Hide();
             using (var gameForm = new MainForm())
@@ -126,8 +125,8 @@ namespace MyGame
             this.Show();
         }
 
-        // --- Manejador del Botón Options ---
-        private void BtnOptions_Click(object sender, EventArgs e)
+        // --- Manejador del Botón Options - AHORA ACEPTA NULL EN SENDER ---
+        private void BtnOptions_Click(object? sender, EventArgs e) // <-- Cambiado object a object?
         {
             using (var optionsForm = new OptionsForm())
             {
@@ -135,8 +134,8 @@ namespace MyGame
             }
         }
 
-        // --- Manejador del Botón Exit ---
-        private void BtnExit_Click(object sender, EventArgs e)
+        // --- Manejador del Botón Exit - AHORA ACEPTA NULL EN SENDER ---
+        private void BtnExit_Click(object? sender, EventArgs e) // <-- Cambiado object a object?
         {
             Environment.Exit(0);
         }
@@ -172,49 +171,55 @@ namespace MyGame
             }
         }
 
-   // --- Dibujo del Menú ---
-protected override void OnPaint(PaintEventArgs e)
-{
-    base.OnPaint(e);
+        // --- MÉTODO PARA DIBUJAR EL TÍTULO CON ANCHO AJUSTABLE ---
+        private void DrawTitle(Graphics g)
+        {
+            if (titleImage != null)
+            {
+                // Definir el ancho deseado para el título (ajusta este valor según lo que necesites)
+                int desiredWidth = 800; // Por ejemplo, 800 píxeles de ancho
 
-    Graphics g = e.Graphics;
+                // Calcular la altura proporcional para mantener la relación de aspecto
+                int desiredHeight = (int)((double)titleImage.Height / titleImage.Width * desiredWidth);
 
-    // Dibujar fondo negro
-    g.Clear(Color.Black);
+                // Crear una nueva imagen redimensionada
+                Bitmap resizedTitle = new Bitmap(titleImage, new Size(desiredWidth, desiredHeight));
 
-    // Dibujar título si está disponible
-    if (titleImage != null)
-    {
-        // Definir el ancho deseado para el título (ajusta este valor según lo que necesites)
-        int desiredWidth = 800; // Por ejemplo, 800 píxeles de ancho
+                // Calcular la posición X para centrar el título horizontalmente
+                int titleX = (this.ClientSize.Width - desiredWidth) / 2;
+                int titleY = -150; // Posición Y fija (puede ser ajustable también)
 
-        // Calcular la altura proporcional para mantener la relación de aspecto
-        int desiredHeight = (int)((double)titleImage.Height / titleImage.Width * desiredWidth);
+                // Dibujar la imagen redimensionada
+                g.DrawImage(resizedTitle, titleX, titleY);
 
-        // Crear una nueva imagen redimensionada
-        Bitmap resizedTitle = new Bitmap(titleImage, new Size(desiredWidth, desiredHeight));
+                // Liberar recursos de la imagen temporal
+                resizedTitle.Dispose();
+            }
+        }
 
-        // Calcular la posición X para centrar el título horizontalmente
-        int titleX = (this.ClientSize.Width - desiredWidth) / 2;
-        int titleY = -70; // Posición Y fija
+        // --- Dibujo del Menú ---
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
 
-        // Dibujar la imagen redimensionada
-        g.DrawImage(resizedTitle, titleX, titleY);
+            Graphics g = e.Graphics;
 
-        // Liberar recursos de la imagen redimensionada
-        resizedTitle.Dispose();
-    }
+            // Dibujar fondo negro
+            g.Clear(Color.Black);
 
-    // Dibujar texto de instrucciones
-    using (var font = new Font("Arial", 10))
-    using (var brush = new SolidBrush(Color.White))
-    {
-        string instructions = "Use las teclas de flecha para moverse. Presiona 'Z' para atacar.";
-        SizeF textSize = g.MeasureString(instructions, font);
-        int textX = (this.ClientSize.Width - (int)textSize.Width) / 2;
-        int textY = this.ClientSize.Height - 50;
-        g.DrawString(instructions, font, brush, textX, textY);
-    }
-}
+            // Dibujar título usando el nuevo método
+            DrawTitle(g);
+
+            // Dibujar texto de instrucciones
+            using (var font = new Font("Arial", 10))
+            using (var brush = new SolidBrush(Color.White))
+            {
+                string instructions = "Use las teclas de flecha para moverse. Presiona 'Z' para atacar.";
+                SizeF textSize = g.MeasureString(instructions, font);
+                int textX = (this.ClientSize.Width - (int)textSize.Width) / 2;
+                int textY = this.ClientSize.Height - 50;
+                g.DrawString(instructions, font, brush, textX, textY);
+            }
+        }
     }
 }

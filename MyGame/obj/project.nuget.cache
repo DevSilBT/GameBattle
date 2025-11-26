@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "2jrUbgAkfcI=",
+  "dgSpecHash": "0VH66QATFPM=",
   "success": true,
   "projectFilePath": "C:\\Users\\siles\\OneDrive\\Documentos\\Juegos\\GameIFinal\\MyGame\\MyGame.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\siles\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
+    "C:\\Users\\siles\\.nuget\\packages\\system.drawing.common\\8.0.10\\system.drawing.common.8.0.10.nupkg.sha512",
     "C:\\Users\\siles\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.22\\microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
     "C:\\Users\\siles\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.22\\microsoft.windowsdesktop.app.ref.8.0.22.nupkg.sha512",
     "C:\\Users\\siles\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.22\\microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",

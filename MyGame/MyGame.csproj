@@ -8,6 +8,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <!-- Agregar la referencia al paquete System.Drawing.Common -->
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+  </ItemGroup>
+
   <!-- Opcional: Si tienes archivos .resx para recursos (idiomas, etc.) -->
   <!-- Asegúrate de que el archivo .resx exista y tenga el .Designer.cs asociado correctamente -->
   <!--

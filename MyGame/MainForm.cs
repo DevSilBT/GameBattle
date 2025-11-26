@@ -1,4 +1,3 @@
-
 //Mainform.cs
 using System;
 using System.Collections.Generic;
@@ -12,10 +11,8 @@ namespace MyGame
         private Player player;
         private List<Enemy> enemies = new List<Enemy>();
 
-        // Cambiamos SpriteSheet por Bitmaps individuales
-        private Bitmap playerImage; // Imagen del jugador
-        private Bitmap enemyImage;  // Imagen del enemigo
-        private Bitmap background;  // Imagen de fondo (lawntown.png)
+        // Imagen de fondo (lawntown.png) - MANTENIDA COMO ESTÁ
+        private Bitmap background;
 
         private DateTime lastTick;
 
@@ -31,49 +28,52 @@ namespace MyGame
             this.Text = "MyGame - Battle System";
             this.KeyPreview = true;
 
-// En MainForm.cs, dentro del constructor, modifica el bloque try-catch:
-try
-{
-    string assetsPath = Config.AssetsPath;
+            // --- CARGA DE IMÁGENES ---
+            // Declarar las variables ANTES del try para que estén disponibles fuera de él
+            CharacterSpriteSheet? playerSheet = null;
+            CharacterSpriteSheet? enemySheet = null;
 
-    // Cargar imágenes con mensajes de depuración
-    Console.WriteLine("Intentando cargar imágenes...");
+            try
+            {
+                string assetsPath = Config.AssetsPath;
 
-    playerImage = Config.LoadImage("player.png");
-    Console.WriteLine($"playerImage cargada: {playerImage?.Width}x{playerImage?.Height}");
+                Console.WriteLine("Intentando cargar imágenes...");
 
-    enemyImage = Config.LoadImage("enemy.png");
-    Console.WriteLine($"enemyImage cargada: {enemyImage?.Width}x{enemyImage?.Height}");
+                // Cargar el fondo (lawntown.png) - MANTENIDO COMO ESTÁ
+                background = Config.LoadImage("lawntown.png");
+                Console.WriteLine($"background cargada: {background?.Width}x{background?.Height}");
 
-    background = Config.LoadImage("lawntown.png");
-    Console.WriteLine($"background cargada: {background?.Width}x{background?.Height}");
+                // Cargar las spritesheets individuales para el jugador y el enemigo
+                playerSheet = new CharacterSpriteSheet("Assets/player.png", 48, 32); // Tamaño de frame para jugador
+                enemySheet = new CharacterSpriteSheet("Assets/enemy.png", 16, 16);   // Tamaño de frame para enemigo
 
-    // Verificar si alguna imagen es nula
-    if (playerImage == null || enemyImage == null || background == null)
-    {
-        throw new Exception("Una o más imágenes son nulas.");
-    }
+                // Verificar si alguna imagen es nula
+                if (background == null || playerSheet == null || enemySheet == null)
+                {
+                    throw new Exception("Una o más imágenes son nulas.");
+                }
 
-    Console.WriteLine("¡Imágenes cargadas correctamente!");
-}
-catch (Exception ex)
-{
-    MessageBox.Show($"Error crítico al cargar imágenes:\n{ex.Message}\n\nVerifique que los archivos 'player.png', 'enemy.png' y 'lawntown.png' existan en la carpeta 'Assets'.", "Error de Carga");
-    Environment.Exit(1);
-}
+                Console.WriteLine("¡Imágenes cargadas correctamente!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error crítico al cargar imágenes:\n{ex.Message}\n\nVerifique que los archivos 'player.png', 'enemy.png' y 'lawntown.png' existan en la carpeta 'Assets'.", "Error de Carga");
+                Environment.Exit(1);
+            }
 
-
-
-            // Jugador: Creamos un Animator pero lo inicializamos con una sola imagen
-            var playerAnim = new Animator(playerImage); // Modificado: pasamos la imagen directamente
+            // --- INICIALIZACIÓN DEL JUEGO ---
+            // Jugador: Creamos un Animator con la spritesheet del jugador
+            var playerAnim = new Animator(playerSheet!); // El ! indica al compilador que asuma que playerSheet no es nulo aquí, ya que si lo fuera, se habría lanzado una excepción en el try
             playerAnim.FrameTimeMs = 100;
+            playerAnim.SetRow(0, 4); // Fila 0, 4 columnas (ajusta según tu spritesheet)
             player = new Player(new PointF(120, 400), playerAnim);
 
-            // Enemigos: Creamos un Animator con la imagen del enemigo
+            // Enemigos: Creamos un Animator con la spritesheet del enemigo
             for (int i = 0; i < 3; i++)
             {
-                var anim = new Animator(enemyImage); // Modificado: pasamos la imagen directamente
+                var anim = new Animator(enemySheet!); // El ! indica al compilador que asuma que enemySheet no es nulo aquí
                 anim.FrameTimeMs = 120;
+                anim.SetRow(0, 4); // Fila 0, 4 columnas (ajusta según tu spritesheet)
 
                 var en = new Enemy(
                     new PointF(520 + i * 80, 400 - i * 20),
@@ -97,44 +97,10 @@ catch (Exception ex)
             this.KeyUp += (s, e) => player.KeyUp(e.KeyCode);
         }
 
-// En Config.cs, reemplaza el método LoadImage existente:
-public static Bitmap LoadImage(string fileName)
-{
-    // Construir la ruta absoluta usando Application.StartupPath
-    string fullPath = Path.Combine(Application.StartupPath, "Assets", fileName);
-
-    // Verificar si el archivo existe
-    if (!File.Exists(fullPath))
-    {
-        // Si no existe en Application.StartupPath, intentar con una ruta relativa al proyecto
-        string projectPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Assets"));
-        fullPath = Path.Combine(projectPath, fileName);
-
-        if (!File.Exists(fullPath))
-        {
-            throw new FileNotFoundException($"No se encontró el archivo {fileName} en ninguna de las rutas probadas.\nRuta 1: {Path.Combine(Application.StartupPath, "Assets")}\nRuta 2: {projectPath}");
-        }
-    }
-
-    try
-    {
-        using (var temp = new Bitmap(fullPath))
-        {
-            return new Bitmap(temp);
-        }
-    }
-    catch (Exception ex)
-    {
-        throw new Exception($"Error al cargar la imagen {fileName}: {ex.Message}", ex);
-    }
-}
-
-
-
         // ============================
-        //          GAME LOOP
+        //          GAME LOOP - AHORA ACEPTA NULL EN SENDER
         // ============================
-        private void GameLoop(object sender, EventArgs e)
+        private void GameLoop(object? sender, EventArgs e) // <-- Cambiado object a object?
         {
             var now = DateTime.Now;
             var elapsed = (now - lastTick).TotalMilliseconds;

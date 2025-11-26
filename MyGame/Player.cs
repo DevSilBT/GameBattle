@@ -10,6 +10,7 @@ namespace MyGame
         private HashSet<Keys> keys = new HashSet<Keys>();
         private bool attacking = false;
         private PointF attackSource;
+        private int currentDirection = 0; // 0 = derecha, 1 = izquierda
 
         public Player(PointF pos, Animator animator) : base(pos, animator)
         {
@@ -26,7 +27,7 @@ namespace MyGame
         {
             if (!Alive) return;
 
-            var dx = 0f; 
+            var dx = 0f;
             var dy = 0f;
 
             if (keys.Contains(Keys.Left) || keys.Contains(Keys.A)) dx -= 1;
@@ -37,23 +38,35 @@ namespace MyGame
             if (dx != 0 || dy != 0)
             {
                 var len = (float)System.Math.Sqrt(dx * dx + dy * dy);
-                dx /= len; 
+                dx /= len;
                 dy /= len;
 
                 Position = new PointF(Position.X + dx * Speed,
                                       Position.Y + dy * Speed);
 
-                animator.SetRow(1, Config.Columns);
+                // Determinar la dirección
+                if (dx < 0)
+                {
+                    currentDirection = 1; // Izquierda
+                    animator.SetRow(5, Config.Columns); // Fila 5 para caminar hacia la izquierda
+                }
+                else
+                {
+                    currentDirection = 0; // Derecha
+                    animator.SetRow(1, Config.Columns); // Fila 1 para caminar hacia la derecha
+                }
             }
             else
             {
+                // Fila 0 para animación de parado (ajusta según tu spritesheet)
                 animator.SetRow(0, Config.Columns);
             }
 
-            if (keys.Contains(Keys.Space) && CanAttack())
+            if (keys.Contains(Keys.Space) && CanAttack()) // Asumiendo que 'Z' es ataque, cambia a 'Space' o la tecla que uses
             {
                 attacking = true;
                 ResetAttackTimer();
+                // Fila 2 para animación de ataque (ajusta según tu spritesheet)
                 animator.SetRow(2, Config.Columns);
 
                 attackSource = new PointF(
@@ -63,7 +76,8 @@ namespace MyGame
             }
             else
             {
-                attacking = false;
+                // Si no está atacando, mantener la animación de parado o caminar
+                // Esto se maneja arriba con SetRow(0) o SetRow(1)
             }
 
             base.Update(elapsedMs);

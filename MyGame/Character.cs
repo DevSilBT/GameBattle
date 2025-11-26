@@ -15,9 +15,9 @@ namespace MyGame
 
         protected Animator animator;
 
+        // El tamaño del personaje se calcula basado en Config y Scale
         protected int width = (int)(Config.FrameW * Config.Scale);
         protected int height = (int)(Config.FrameH * Config.Scale);
-
 
         // Combat
         protected double attackCooldownMs = 600;
@@ -56,7 +56,8 @@ namespace MyGame
 
         protected virtual void OnHurt()
         {
-            animator.SetRow(4, Config.Columns); // animación de ser golpeado
+            // Ajusta la fila según tu spritesheet. Suponiendo fila 4 para "herido"
+            animator.SetRow(4, Config.Columns);
         }
 
         // ------------------------------
@@ -69,36 +70,37 @@ namespace MyGame
             attackTimer += elapsedMs;
             animator.Update(elapsedMs);
         }
-// En Character.cs, modifica el método Draw:
-public virtual void Draw(Graphics g)
-{
-    if (!Alive) return;
 
-    var bmp = animator.CurrentFrame();
-    if (bmp != null)
-    {
-        // Redimensionar la imagen al tamaño definido en Config
-        int drawWidth = (int)(Config.FrameW * Config.Scale);
-        int drawHeight = (int)(Config.FrameH * Config.Scale);
+        // ------------------------------
+        //      DIBUJAR PERSONAJE
+        // ------------------------------
+        public virtual void Draw(Graphics g)
+        {
+            if (!Alive) return;
 
-        g.DrawImage(
-            bmp,
-            new Rectangle(
-                (int)Position.X,
-                (int)Position.Y,
-                drawWidth,
-                drawHeight
-            )
-        );
-    }
-    else
-    {
-        // Dibujar un rectángulo rojo como fallback si la imagen es nula
-        g.FillRectangle(Brushes.Red, (int)Position.X, (int)Position.Y, 50, 50);
-    }
-}
+            var bmp = animator.CurrentFrame();
+            if (bmp != null)
+            {
+                // Redimensionar la imagen al tamaño definido en Config
+                int drawWidth = (int)(Config.FrameW * Config.Scale);
+                int drawHeight = (int)(Config.FrameH * Config.Scale);
 
-
+                g.DrawImage(
+                    bmp,
+                    new Rectangle(
+                        (int)Position.X,
+                        (int)Position.Y,
+                        drawWidth,
+                        drawHeight
+                    )
+                );
+            }
+            else
+            {
+                // Dibujar un rectángulo rojo como fallback si la imagen es nula
+                g.FillRectangle(Brushes.Red, (int)Position.X, (int)Position.Y, 50, 50);
+            }
+        }
 
         protected bool CanAttack() => attackTimer >= attackCooldownMs;
         protected void ResetAttackTimer() => attackTimer = 0;
@@ -113,11 +115,13 @@ public virtual void Draw(Graphics g)
             if (HP <= 0)
             {
                 // NO asignamos Alive porque es una propiedad de solo lectura
-                animator.SetRow(4, Config.Columns); // animación de muerte
+                // Ajusta la fila según tu spritesheet. Suponiendo fila 3 para "muerte"
+                animator.SetRow(3, Config.Columns);
             }
             else
             {
-                animator.SetRow(4, Config.Columns); // animación de golpe
+                // Ajusta la fila según tu spritesheet. Suponiendo fila 4 para "herido"
+                animator.SetRow(4, Config.Columns);
             }
         }
     }

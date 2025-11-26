@@ -1,5 +1,4 @@
-///animator.cs
-
+// Animator.cs (Modificado)
 using System;
 using System.Drawing;
 
@@ -7,38 +6,55 @@ namespace MyGame
 {
     class Animator
     {
-        private Bitmap currentImage; // La imagen actual que se va a dibujar
+        private CharacterSpriteSheet sheet; // Cambiado de SpriteSheet a CharacterSpriteSheet
         private int currentFrame;
         private double timer;
 
-        public int TotalFrames { get; private set; } = 1;
+        public int TotalFrames { get; private set; } = Config.Columns;
         public int Row { get; private set; } = 0;
         public double FrameTimeMs { get; set; } = 100;
 
-        public Animator(Bitmap image)
+        public Animator(CharacterSpriteSheet sheet) // Cambiado el parámetro
         {
-            this.currentImage = image ?? throw new ArgumentNullException(nameof(image), "La imagen no puede ser nula.");
-            this.TotalFrames = 1;
+            this.sheet = sheet;
         }
 
+        // --- MÉTODO SIMPLE ---
         public void SetRow(int row)
         {
-            // Ignoramos el row, ya que solo tenemos una imagen
+            SetRow(row, Config.Columns);
         }
 
+        // --- MÉTODO COMPLETO ---
         public void SetRow(int row, int totalFrames)
         {
-            // Ignoramos el row y totalFrames, ya que solo tenemos una imagen
+            if (totalFrames <= 0)
+                totalFrames = Config.Columns;
+
+            if (row != Row)
+            {
+                Row = row;
+                TotalFrames = totalFrames;
+                currentFrame = 0;
+                timer = 0;
+            }
         }
 
         public void Update(double elapsedMs)
         {
-            // Para una sola imagen, no hacemos nada en Update
+            timer += elapsedMs;
+            if (timer >= FrameTimeMs)
+            {
+                timer = 0;
+                currentFrame++;
+                if (currentFrame >= TotalFrames)
+                    currentFrame = 0;
+            }
         }
 
         public Bitmap CurrentFrame()
         {
-            return currentImage;
+            return sheet.GetFrame(currentFrame, Row);
         }
     }
 }
