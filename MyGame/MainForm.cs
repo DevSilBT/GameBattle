@@ -1,6 +1,5 @@
 
 //Mainform.cs
-//Mainform.cs
 using System;
 using System.Collections.Generic;
 using System.Drawing;

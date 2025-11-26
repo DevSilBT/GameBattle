@@ -1,0 +1,15 @@
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.exe
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.deps.json
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.runtimeconfig.json
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.dll
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\bin\Debug\net8.0-windows\MyGame.pdb
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.AssemblyInfoInputs.cache
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.AssemblyInfo.cs
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.csproj.CoreCompileInputs.cache
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.sourcelink.json
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.dll
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\refint\MyGame.dll
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.pdb
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\MyGame.genruntimeconfig.cache
+C:\Users\siles\OneDrive\Documentos\Juegos\GameIFinal\MyGame\obj\Debug\net8.0-windows\ref\MyGame.dll
